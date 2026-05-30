@@ -1,14 +1,9 @@
-
 {
   "name": "goldpoint-sms-api",
   "version": "1.0.0",
   "description": "SMS API for GoldPoint Bank",
   "main": "api/send-sms.js",
   "scripts": {
-    "start": "vercel dev"
-  },
-  "dependencies": {},
-  "engines": {
-    "node": "24.x"
+    "dev": "vercel dev"
   }
 }
