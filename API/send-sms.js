@@ -1,23 +1,22 @@
-
-// Termii API Key - Keep this on server (hidden from frontend)
-const TERMII_API_KEY = 'TLvUxMhfOFHVofTptrwACkatzaFlBidVMEYHrPLZbogysaktHiImoBXLmmKyNm';
+// Termii API Key
+const TERMII_API_KEY = 'TLvUxMhfOFHVofTptrwACkatzaFlBidVMEYrHPLZbogysaktHiImoBXLmmKyNm';
 const TERMII_SENDER_ID = 'Goldpoint';
 const TERMII_BASE_URL = 'https://v3.api.termii.com';
 
 export default async function handler(req, res) {
-  // Enable CORS for your app
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
-  // Handle preflight requests
+  // Handle preflight
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
-  // Only allow POST requests
+  // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -65,7 +64,7 @@ export default async function handler(req, res) {
     console.error('SMS Error:', error);
     return res.status(500).json({ 
       success: false, 
-      error: 'Internal server error' 
+      error: 'Internal server error: ' + error.message
     });
   }
 }
