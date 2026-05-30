@@ -1,19 +1,16 @@
-// Termii API Key
 const TERMII_API_KEY = 'TLvUxMhfOFHVofTptrwACkatzaFlBidVMEYrHPLZbogysaktHiImoBXLmmKyNm';
 const TERMII_SENDER_ID = 'Goldpoint';
 const TERMII_BASE_URL = 'https://v3.api.termii.com';
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Handle preflight
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   // Only allow POST
@@ -24,13 +21,10 @@ export default async function handler(req, res) {
   const { to, message } = req.body;
 
   if (!to || !message) {
-    return res.status(400).json({ error: 'Missing required fields: to and message' });
+    return res.status(400).json({ error: 'Missing required fields' });
   }
 
   try {
-    console.log(`Sending SMS to: ${to}`);
-    console.log(`Message: ${message}`);
-
     const response = await fetch(`${TERMII_BASE_URL}/api/sms/send`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -45,26 +39,22 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    console.log('Termii Response:', data);
 
     if (data.code === 'ok') {
       return res.status(200).json({ 
         success: true, 
-        message: 'SMS sent successfully',
-        messageId: data.message_id,
-        balance: data.balance
+        message: 'SMS sent successfully'
       });
     } else {
       return res.status(400).json({ 
         success: false, 
-        error: data.message || 'SMS sending failed' 
+        error: data.message 
       });
     }
   } catch (error) {
-    console.error('SMS Error:', error);
     return res.status(500).json({ 
       success: false, 
-      error: 'Internal server error: ' + error.message
+      error: 'Server error: ' + error.message 
     });
   }
-}
+};
